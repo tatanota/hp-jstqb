@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>JSTQB AL対策問題集</title>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="stylesheet" href="stylesheet2.css" />
+
+    <!-- ファビコンの設定 -->
+    <link rel="icon" href="img/aaa.png" type="image/png" />
+    <link rel="shortcut icon" href="img/aaa.png" type="image/x-icon" />
+    <!-- 広告 -->
+    <meta name="google-adsense-account" content="ca-pub-9876387594986349" />
+  </head>
+  <body>
+    <!-- ハンバーガーメニュー部分 -->
+    <header class="header">
+      <!-- ヘッダーロゴ -->
+      <div class="logo">JSTQB AL対策問題集</div>
+
+      <div class="nav">
+        <!-- ハンバーガーメニューの表示・非表示を切り替えるチェックボックス -->
+        <input id="drawer_input" class="drawer_hidden" type="checkbox" />
+
+        <!-- ハンバーガーアイコン -->
+        <label for="drawer_input" class="drawer_open"><span></span></label>
+
+        <!-- メニュー -->
+        <nav class="nav_content">
+          <ul class="nav_list">
+            <li class="nav_item"><a href="index1.html">出題</a></li>
+            <li class="nav_item"><a href="index2.html">本サイトについて</a></li>
+            <li class="nav_item"><a href="index3.html">その他参考情報</a></li>
+            <li class="nav_item">
+              <a href="PrivacyPolicy.html">プライバシーポリシー</a>
+            </li>
+            <li class="nav_item"><a href="">お問い合わせ</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- ハンバーガーメニュー部分 -->
+
+    <!------------------------------------------------------------------------------>
+
+    <div id="content">データを読み込んでいます...</div>
+
+    <!-- モーダルウィンドウ -->
+    <div id="resultModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span id="closeModal" class="close-button">&times;</span>
+        <p id="resultMessage"></p>
+        <button id="nextQuestionButton" class="option-button">次の質問</button>
+      </div>
+    </div>
+
+    <!-- 間違えた問題一覧のボタン -->
+    <button id="showIncorrect" onclick="showIncorrectQuestions()">
+      記録を表示
+    </button>
+
+    <!------------------------------------------------------------------------------>
+    <!-- 間違えた問題一覧ページ -->
+    <div id="incorrectQuestionsPage" style="display: none">
+      <h2>記録一覧</h2>
+      <ul id="incorrectQuestionsList"></ul>
+      <button onclick="goBack()">戻る</button>
+      <button onclick="IncorrectAllQuestions()">間違えた問題で出題</button>
+      <button onclick="clearLocalStorage()">記録を削除</button>
+    </div>
+
+    <!-- loadNextQuestionを起動 -->
+    <script src="script.js" defer></script>
+    <script src="script2.js" defer></script>
+
+    <!-- サイト説明 -->
+    <!-- プライバシーポリシーの作成 -->
+    <!-- 参考サイト一覧 -->
+  </body>
+</html>
