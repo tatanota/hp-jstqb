@@ -1,44 +1,160 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>JSTQB AL対策問題集</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>JSTQB/資格 対策問題集</title>
 
     <!-- ファビコンの設定 -->
     <link rel="icon" href="img/aaa.png" type="image/png" />
     <link rel="shortcut icon" href="img/aaa.png" type="image/x-icon" />
-  </head>
-  <body>
-    <!------------------------------------------------------------------------------>
-    <!-- 間違えた問題一覧ページ -->
-    <div>
-      <li>
-        <a href="index.html">JSTQB TAE(テスト自動化エンジニア)対策問題集</a>
-      </li>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #4a90d9, #6bb3ff);
+            color: white;
+            box-shadow: 0 2px 10px rgba(74, 144, 217, 0.3);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border: 1px solid #e8e8e8;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.2);
+            border-color: #4a90d9;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4a90d9;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-link {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding-top: 0.5rem;
+        }
+
+        .card-link a {
+            display: block;
+            background: linear-gradient(135deg, #4a90d9, #6bb3ff);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .card-link a:hover {
+            background: linear-gradient(135deg, #6bb3ff, #4a90d9);
+            transform: scale(1.02);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f1f1f1;
+            color: #666;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>JSTQB/資格 対策問題集</h1>
+    </header>
+
+    <div class="container">
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">JSTQB TAE(テスト自動化エンジニア)対策問題集</div>
+                <div class="card-link">
+                    <a href="index.html">詳細を見る</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">JSTQB TA(テストアナリスト)対策問題集</div>
+                <div class="card-link">
+                    <a href="index1.html">詳細を見る</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">JSTQB TM(テストマネージャー)対策問題集</div>
+                <div class="card-link">
+                    <a href="index.html">詳細を見る</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">アジャイル ソフトウェア開発技術者検定対策問題集</div>
+                <div class="card-link">
+                    <a href="01_agile/index1.html">詳細を見る</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Webクリエイター能力認定試験 エキスパート対策問題集</div>
+                <div class="card-link">
+                    <a href="02_WebCreator/index1.html">詳細を見る</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div>
-      <li><a href="index1.html">JSTQB TA(テストアナリスト)対策問題集</a></li>
-    </div>
-
-    <div>
-      <li><a href="index.html">JSTQB TM(テストマネージャー)対策問題集</a></li>
-    </div>
-
-    <div>
-      <li>
-        <a href="01_agile/index1.html"
-          >アジャイル　ソフトウェア開発技術者検定対策問題集</a
-        >
-      </li>
-    </div>
-
-    <div>
-      <li>
-        <a href="02_WebCreator/index1.html"
-          >Webクリエイター能力認定試験 エキスパート対策問題集</a
-        >
-      </li>
-    </div>
-  </body>
+    <footer>
+        <p>&copy; 2024 JSTQB/資格 対策問題集</p>
+    </footer>
+</body>
 </html>

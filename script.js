@@ -57,7 +57,10 @@ function displayQuestion(question) {
     <p>${question.text}</p>
     <br>
     <ul id="options"></ul>
-    <button id="submitButton" class="option-button" disabled>回答する</button>
+    <div class="action-row">
+      <button id="submitButton" class="option-button" disabled>回答する</button>
+      <button id="showIncorrect" class="option-button" onclick="showIncorrectQuestions()">記録を表示</button>
+    </div>
   `;
 
   const optionsDiv = document.getElementById("options");
@@ -72,7 +75,7 @@ function displayQuestion(question) {
   //console.log(`shuffledOptions${shuffledOptions}`);//デバッグ
   //console.log(`newAnswerLabel${newAnswerLabel}`);//デバッグ
 
-  // ランダムに並び替えた選択肢にラベルを付与して表示
+  // ランダムに並び替えた選択肢を表示（A/B/C/Dボタンを左、テキストを右に同一行で並べる）
   shuffledOptions.forEach((text, index) => {
     const label = optionLabels[index]; // ラベルを再割り当て
     const button = document.createElement("button");
@@ -81,9 +84,15 @@ function displayQuestion(question) {
     button.onclick = () => handleOptionClick(label);
 
     const li = document.createElement("li");
-    li.textContent = `${label}. ${text}`;
+    li.className = "option-row";
+    li.appendChild(button);
+
+    const span = document.createElement("span");
+    span.className = "option-text";
+    span.textContent = `${text}`;
+    li.appendChild(span);
+
     optionsDiv.appendChild(li);
-    optionsDiv.appendChild(button);
   });
 
   // 回答ボタンのクリックイベント
@@ -159,6 +168,19 @@ function handleSubmit(shuffledOptions, newAnswerLabel) {
     : `不正解です。正しい答えは "${newAnswerLabel}" でした。`;
 
   resultMessage.textContent = message;
+
+  // 解説を表示（存在する場合のみ）
+  const resultExplanation = document.getElementById("resultExplanation");
+  if (resultExplanation) {
+    if (currentQuestion && currentQuestion.explanation) {
+      resultExplanation.textContent = "解説：" + currentQuestion.explanation;
+      resultExplanation.style.display = "block";
+    } else {
+      resultExplanation.textContent = "";
+      resultExplanation.style.display = "none";
+    }
+  }
+
   resultModal.style.display = "block";
 
   // 正解/不正解の処理
@@ -224,14 +246,83 @@ function proceedToNextQuestion() {
 
 
 // -----------------------------------------------------
+// 成績サマリー（全体・大分類別・中分類別の 正答数/回答数 と 正答率）を生成
+function buildScoreSummary() {
+  const entries = incorrectQuestions;
+
+  // 正答率を計算（回答数0のときは0%として扱い、NaNを防ぐ）
+  const pct = (correct, total) => (total > 0 ? Math.round((correct / total) * 100) : 0);
+
+  // 全体集計
+  const overallTotal = entries.length;
+  const overallCorrect = entries.filter((e) => e.flag === "〇").length;
+
+  // 回答履歴が無い場合
+  if (overallTotal === 0) {
+    return `<div class="score-summary"><h3>成績サマリー</h3><p>まだ回答記録がありません。</p></div>`;
+  }
+
+  // 中分類(class2)ごとに集計する。各中分類が属する大分類(class1)も保持する。
+  const map = {};
+  const order = [];
+  entries.forEach((e) => {
+    const key = e.class2;
+    if (!(key in map)) {
+      map[key] = { class1: e.class1, class2: e.class2, c: 0, t: 0 };
+      order.push(key);
+    }
+    map[key].t += 1;
+    if (e.flag === "〇") map[key].c += 1;
+  });
+
+  // 大分類→中分類の順に並べ替える（同じ大分類の行がまとまる）
+  const list = order.map((k) => map[k]);
+  list.sort(
+    (a, b) =>
+      a.class1.localeCompare(b.class1, "ja") ||
+      a.class2.localeCompare(b.class2, "ja")
+  );
+
+  // 中分類ごとの行を生成。大分類は変わったときだけ表示する。
+  let prevClass1 = null;
+  const rows = list
+    .map((r) => {
+      const showMajor = r.class1 !== prevClass1;
+      prevClass1 = r.class1;
+      return `<tr><td class="cat-major">${showMajor ? r.class1 : ""}</td><td class="cat-name">${r.class2}</td><td class="cat-score">${r.c} / ${r.t}</td><td class="cat-pct">${pct(r.c, r.t)}%</td></tr>`;
+    })
+    .join("");
+
+  return `
+  <div class="score-summary">
+    <h3>成績サマリー</h3>
+    <div class="overall-score">
+      全体：正答 <strong>${overallCorrect}</strong> / 回答 <strong>${overallTotal}</strong>
+      <span class="overall-pct">（正答率 ${pct(overallCorrect, overallTotal)}%）</span>
+    </div>
+
+    <table class="score-table" border="1">
+      <thead><tr><th>大分類</th><th>中分類</th><th>正答数 / 回答数</th><th>正答率</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+  `;
+}
+
+// -----------------------------------------------------
 // ページ表示や間違えた問題の一覧表示時に Local Storage からデータを使用
 function createIncorrectQuestionsTable() {
   const incorrectQuestionsList = document.getElementById("incorrectQuestionsList");
   incorrectQuestionsList.innerHTML = ""; // リストをクリア
 
+  // 成績サマリー（全体＋中分類ごとの正答率）を作成
+  const summaryHtml = buildScoreSummary();
+
   // テーブルのヘッダーを作成
   incorrectQuestionsList.innerHTML = `
-   <table border="1">
+   ${summaryHtml}
+   <h3 class="record-detail-title">回答履歴</h3>
+   <table class="record-table" border="1">
      <thead>
        <tr>
           <th>回答日</th>
@@ -247,7 +338,8 @@ function createIncorrectQuestionsTable() {
    </table>
  `;
 
-  const tableBody = incorrectQuestionsList.querySelector("tbody");
+  // 履歴テーブル(.record-table)のtbodyを対象にする（集計表のtbodyと取り違えないため）
+  const tableBody = incorrectQuestionsList.querySelector(".record-table tbody");
 
   // 間違えた問題をテーブルに追加
   incorrectQuestions.forEach((entry) => {
