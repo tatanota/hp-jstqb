@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>JSTQB AL対策問題集 - テストマネージャー</title>
+    <link rel="stylesheet" href="../stylesheet.css" />
+    <link rel="stylesheet" href="../stylesheet2.css" />
+
+    <!-- ファビコンの設定 -->
+    <link rel="icon" href="../img/aaa.png" type="image/png" />
+    <link rel="shortcut icon" href="../img/aaa.png" type="image/x-icon" />
+    <!-- 広告 -->
+    <meta name="google-adsense-account" content="ca-pub-9876387594986349" />
+
+    <style>
+      /* 全体のモダンなデザイン */
+      body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header.header {
+        background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+        color: white;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .logo a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      /* ドロワー内メニュー（縦並び・濃色文字） */
+      nav.nav_content ul.nav_list {
+        list-style: none;
+        margin: 0;
+        padding: 1rem 0;
+      }
+
+      nav.nav_content a {
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+        display: block;
+        padding: 0.9rem 1.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+      }
+
+      nav.nav_content a:hover {
+        background: #f8f9fa;
+        color: #4a90d9;
+      }
+
+      /* ハンバーガーメニュー（三本線・白） */
+      .drawer_open {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .drawer_open span,
+      .drawer_open span:before,
+      .drawer_open span:after {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 3px;
+        background: #fff;
+        border-radius: 3px;
+        position: absolute;
+        transition: all 0.3s ease;
+      }
+
+      .drawer_open span:before {
+        bottom: 8px;
+      }
+
+      .drawer_open span:after {
+        top: 8px;
+      }
+
+      #drawer_input:checked ~ .drawer_open span {
+        background: rgba(255, 255, 255, 0);
+      }
+
+      #drawer_input:checked ~ .drawer_open span::before {
+        bottom: 0;
+        transform: rotate(45deg);
+      }
+
+      #drawer_input:checked ~ .drawer_open span::after {
+        top: 0;
+        transform: rotate(-45deg);
+      }
+
+      /* コンテンツエリア */
+      #content {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        animation: slideUp 0.4s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h5 {
+        color: #4a90d9;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+
+      h2 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        line-height: 1.3;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        text-align: left;
+        color: #333;
+      }
+
+      /* ボタンスタイル */
+      .option-button {
+        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 100%;
+        max-width: 200px;
+        margin: 10px auto;
+        display: block;
+      }
+
+      .option-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+      }
+
+      .option-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+      }
+
+      .option-button[disabled] {
+        background: #95a5a6;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      /* 選択肢の行：A/B/C/Dボタンを左、テキストを右に同一行で配置 */
+      #options {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem 0;
+      }
+
+      .option-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 10px 0;
+      }
+
+      .option-row .option-button {
+        width: auto;
+        min-width: 44px;
+        max-width: none;
+        margin: 0;
+        flex-shrink: 0;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+        box-shadow: 0 2px 8px rgba(74, 144, 217, 0.3);
+      }
+
+      .option-text {
+        font-size: 1.05rem;
+        line-height: 1.5;
+        color: #333;
+      }
+
+      /* 回答する／記録を表示 を横並び */
+      .action-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 1rem;
+      }
+
+      .action-row .option-button {
+        margin: 0;
+      }
+
+      /* モーダル */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        animation: slideUp 0.3s ease;
+        position: relative;
+      }
+
+      .close-button {
+        color: #7f8c8d;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        line-height: 1;
+      }
+
+      .close-button:hover {
+        color: #2c3e50;
+        transform: rotate(90deg);
+      }
+
+      #resultMessage {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+      }
+
+      /* 解説スタイル */
+      .explanation {
+        background-color: #f8fafc;
+        border-left: 4px solid #4a90d9;
+        padding: 1rem 1.2rem;
+        border-radius: 0 4px 4px 0;
+        text-align: left;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #4a5568;
+        margin: 1rem 0;
+      }
+
+      /* 間違えた問題一覧ページ */
+      #incorrectQuestionsPage {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        animation: slideUp 0.4s ease;
+      }
+
+      #incorrectQuestionsPage h2 {
+        text-align: center;
+        color: #4a90d9;
+        margin-bottom: 1.5rem;
+      }
+
+      #incorrectQuestionsList {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #incorrectQuestionsList li {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 成績サマリー */
+      .score-summary {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .score-summary h3 {
+        color: #4a90d9;
+        margin: 0 0 0.8rem 0;
+      }
+
+      .overall-score {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        background: #fff;
+        border-left: 4px solid #4a90d9;
+        border-radius: 4px;
+        padding: 0.7rem 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .overall-score strong {
+        color: #4a90d9;
+        font-size: 1.25rem;
+      }
+
+      .overall-pct {
+        color: #357abd;
+        font-weight: 600;
+      }
+
+      .score-subtitle {
+        color: #2c3e50;
+        margin: 1rem 0 0.5rem 0;
+        font-size: 1.05rem;
+      }
+
+      .score-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        font-size: 0.95rem;
+      }
+
+      .score-table th {
+        background: #4a90d9;
+        color: #fff;
+        padding: 8px 10px;
+        text-align: left;
+      }
+
+      .score-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #edf2f7;
+      }
+
+      .score-table .cat-score {
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .score-table .cat-major {
+        font-weight: 600;
+        color: #2c3e50;
+        white-space: nowrap;
+        vertical-align: top;
+      }
+
+      .score-table .cat-pct {
+        text-align: right;
+        font-weight: 600;
+        color: #357abd;
+        white-space: nowrap;
+      }
+
+      .record-detail-title {
+        color: #2c3e50;
+        margin: 1.5rem 0 0.5rem 0;
+      }
+
+      /* 回答履歴テーブル：横スクロール可能にして崩れを防ぐ */
+      .record-table {
+        border-collapse: collapse;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        max-width: 100%;
+      }
+
+      .record-table th,
+      .record-table td {
+        padding: 6px 10px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .record-table th {
+        background: #4a90d9;
+        color: #fff;
+      }
+
+      /* ボタングループ */
+      .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .button-group button {
+        padding: 10px 20px;
+        font-size: 14px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+      }
+
+      .btn-danger {
+        background: #ef4444;
+        color: white;
+      }
+
+      .btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      /* レスポンシブ */
+      @media (max-width: 768px) {
+        nav.nav_content ul.nav_list {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .nav_item a {
+          display: block;
+          padding: 0.8rem;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        #content, #incorrectQuestionsPage {
+          margin: 1rem auto;
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ハンバーガーメニュー部分 -->
+    <header class="header">
+      <!-- ヘッダーロゴ -->
+      <div class="logo"><a href="../index.html">JSTQB AL対策問題集 - テストマネージャー</a></div>
+
+      <div class="nav">
+        <!-- ハンバーガーメニューの表示・非表示を切り替えるチェックボックス -->
+        <input id="drawer_input" class="drawer_hidden" type="checkbox" />
+
+        <!-- ハンバーガーアイコン -->
+        <label for="drawer_input" class="drawer_open"><span></span></label>
+
+        <!-- メニュー -->
+        <nav class="nav_content">
+          <ul class="nav_list">
+            <li class="nav_item"><a href="index1.html">出題</a></li>
+            <li class="nav_item"><a href="../index2.html">本サイトについて</a></li>
+            <li class="nav_item"><a href="../index3.html">その他参考情報</a></li>
+            <li class="nav_item">
+              <a href="../PrivacyPolicy.html">プライバシーポリシー</a>
+            </li>
+            <li class="nav_item"><a href="">お問い合わせ</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- ハンバーガーメニュー部分 -->
+
+    <!------------------------------------------------------------------------------>
+
+    <div id="content">データを読み込んでいます...</div>
+
+    <!-- モーダルウィンドウ -->
+    <div id="resultModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span id="closeModal" class="close-button">&times;</span>
+        <p id="resultMessage"></p>
+        <p id="resultExplanation" class="explanation"></p>
+        <button id="nextQuestionButton" class="option-button">次の質問</button>
+      </div>
+    </div>
+
+    <!------------------------------------------------------------------------------>
+    <!-- 間違えた問題一覧ページ -->
+    <div id="incorrectQuestionsPage" style="display: none">
+      <h2>記録一覧</h2>
+      <ul id="incorrectQuestionsList"></ul>
+      <div class="button-group">
+        <button onclick="goBack()" class="btn-secondary">戻る</button>
+        <button onclick="IncorrectAllQuestions()" class="btn-primary">間違えた問題で出題</button>
+        <button onclick="clearLocalStorage()" class="btn-danger">記録を削除</button>
+      </div>
+    </div>
+    <!------------------------------------------------------------------------------>
+
+    <!-- loadNextQuestionを起動 -->
+    <script src="../script.js" defer></script>
+    <script src="../script2.js" defer></script>
+
+    <!-- サイト説明 -->
+    <!-- プライバシーポリシーの作成 -->
+    <!-- 参考サイト一覧 -->
+  </body>
+</html>
