@@ -11,6 +11,11 @@ let correctAnswersCount = 0;// 正解した数をカウントする変数
 
 let isFirstQuestion = true;   // 判別するフラグ
 
+// 資格ごと(ページのディレクトリ)に記録を分けるためのLocal Storageキー
+// 例: "/index1.html" -> "root" 、 "/03_TestManager/index1.html" -> "/03_TestManager"
+const STORAGE_SECTION = location.pathname.replace(/index1\.html$/, "").replace(/\/$/, "") || "root";
+const STORAGE_KEY = "incorrectQuestions::" + STORAGE_SECTION;
+
 // -----------------------------------------------------
 // 外部JSONファイルを非同期で取得
 function loadNextQuestion() {
@@ -403,13 +408,13 @@ function IncorrectAllQuestions() {
 // -----------------------------------------------------
 // Local Storage に保存
 function saveIncorrectQuestionsToLocalStorage() {
-  localStorage.setItem("incorrectQuestions", JSON.stringify(incorrectQuestions));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(incorrectQuestions));
 }
 
 // -----------------------------------------------------
 // Local Storage から読み込み
 function loadIncorrectQuestionsFromLocalStorage() {
-  const storedData = localStorage.getItem("incorrectQuestions");
+  const storedData = localStorage.getItem(STORAGE_KEY);
   if (storedData) {
     incorrectQuestions = JSON.parse(storedData);
   } else {
@@ -423,8 +428,9 @@ loadIncorrectQuestionsFromLocalStorage();
 
 // -----------------------------------------------------
 function clearLocalStorage() {
-  localStorage.clear();
-  //console.log("Local Storage をすべてクリアしました！");
+  localStorage.removeItem(STORAGE_KEY); // このページ(資格)の記録だけを削除
+  incorrectQuestions = [];
+  //console.log("このページの記録を削除しました！");
   incorrectQuestionsList.innerHTML = "";
 }
 
